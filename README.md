@@ -34,7 +34,7 @@ predictions for cities around the world.
 
 <h2>🚀 Live Demo</h2>
 <p>
-  <a href="https://your-github-pages-link-here" target="_blank">
+  <a href="https://zaidansaricode.github.io/weather-now/" target="_blank">
     View Live Demo
   </a>
 </p>
