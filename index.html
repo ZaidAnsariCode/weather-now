@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+
+    <!-- External Css Files -->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+      rel="stylesheet" />
+  </head>
+  <body>
+    <header>
+      <img src="assets/images/logo.svg" alt="logo svg" />
+      <div class="units-selector">
+        <button id="unit-btn" class="unit-selected">
+          <img src="assets/images/icon-units.svg" alt="" />
+          <span>Units</span>
+          <img src="assets/images/icon-dropdown.svg" alt="" />
+        </button>
+        <div class="units-menu">
+          <span>Switch to Imperial</span>
+          <div class="unit-group">
+            <span class="title">Temperature</span>
+            <ul data-group="temperature">
+              <li class="unit-option" id="celcius">
+                <span>Celcius (°C)</span>
+                <img
+                  src="assets/images/icon-checkmark.svg"
+                  alt=""
+                  class="icon-checkmark" />
+              </li>
+              <li class="unit-option" id="fahrenheit">
+                <span>Fahrenheit (°F)</span>
+                <img
+                  src="assets/images/icon-checkmark.svg"
+                  alt=""
+                  class="icon-checkmark" />
+              </li>
+            </ul>
+          </div>
+          <div class="unit-group">
+            <span class="title">Wind Speed</span>
+            <ul data-group="wind">
+              <li class="unit-option" id="kmh">
+                <span>Km/h</span>
+                <img
+                  src="assets/images/icon-checkmark.svg"
+                  alt=""
+                  class="icon-checkmark" />
+              </li>
+              <li class="unit-option" id="mph">
+                <span>Mph</span>
+                <img
+                  src="assets/images/icon-checkmark.svg"
+                  alt=""
+                  class="icon-checkmark" />
+              </li>
+            </ul>
+          </div>
+          <div class="unit-group">
+            <span class="title">Precipitation</span>
+            <ul data-group="precipitation">
+              <li class="unit-option" id="mm">
+                <span>Millimeters (mm)</span>
+                <img
+                  src="assets/images/icon-checkmark.svg"
+                  alt=""
+                  class="icon-checkmark" />
+              </li>
+              <li class="unit-option" id="in">
+                <span>Inches (in)</span>
+                <img
+                  src="assets/images/icon-checkmark.svg"
+                  alt=""
+                  class="icon-checkmark" />
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div class="api-error-state-container hide">
+        <img src="assets/images/icon-error.svg" alt="" />
+        <h2 class="error-statement">Something went wrong</h2>
+        <p class="error-paragraph">
+          we couldn't connect to the server (API error). Please try again in a
+          few moments.
+        </p>
+        <button class="retry">
+          <span>Retry</span>
+          <img src="assets/images/icon-retry.svg" alt="" />
+        </button>
+      </div>
+      <h1>How's the sky looking today?</h1>
+      <div class="search-container">
+        <div class="search-bar">
+          <div class="search-field">
+            <img src="assets/images/icon-search.svg" alt="" />
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Search for a place..." />
+          </div>
+          <button id="search-btn">Search</button>
+          <ul class="search-results"></ul>
+          <div class="no-search-result">
+            <p>No result found</p>
+          </div>
+        </div>
+      </div>
+      <div class="weather-container">
+        <div class="weather-details">
+          <div class="weather-card">
+            <div class="skeleton-box">
+              <div class="shimmer"></div>
+            </div>
+            <div class="card-location">
+              <h2 class="main-place-name">
+                <span id="city"></span><span id="state"></span
+                ><span id="country"></span>
+              </h2>
+              <time datetime="2025-08-05">Tuesday, Aug 5, 2025</time>
+            </div>
+            <div class="card-temperature">
+              <img
+                src="assets/images/icon-sunny.webp"
+                alt=""
+                class="weather-visual" />
+              <span class="temperature-degree">68<span>°</span> </span>
+            </div>
+          </div>
+          <div class="weather-stats">
+            <div class="stats-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <span class="stat-title">Feels Like</span>
+              <span class="feels-like stat-value">64°</span>
+            </div>
+            <div class="stats-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <span class="stat-title">Humidity</span>
+              <span class="humidity-value stat-value">46%</span>
+            </div>
+            <div class="stats-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <span class="stat-title">Wind</span>
+              <span class="wind-value stat-value">9 mph</span>
+            </div>
+            <div class="stats-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <span class="stat-title">Precipitation</span>
+              <span class="precipitation-value stat-value">0 in</span>
+            </div>
+          </div>
+          <div class="daily-forecast">
+            <span>Daily Forecast</span>
+            <div class="forecast-days">
+              <div class="forecast-item">
+                <div class="skeleton-box">
+                  <div class="shimmer"></div>
+                </div>
+                <span class="day">TUE</span>
+                <img src="assets/images/icon-rain.webp" alt="" />
+                <p>
+                  <span class="high-temp">68°</span>
+                  <span class="low-temp">58°</span>
+                </p>
+              </div>
+              <div class="forecast-item">
+                <div class="skeleton-box">
+                  <div class="shimmer"></div>
+                </div>
+                <span class="day">Wed</span>
+                <img src="assets/images/icon-drizzle.webp" alt="" />
+                <p>
+                  <span class="high-temp">68°</span>
+                  <span class="low-temp">58°</span>
+                </p>
+              </div>
+              <div class="forecast-item">
+                <div class="skeleton-box">
+                  <div class="shimmer"></div>
+                </div>
+                <span class="day">Thu</span>
+                <img src="assets/images/icon-sunny.webp" alt="" />
+                <p>
+                  <span class="high-temp">68°</span>
+                  <span class="low-temp">58°</span>
+                </p>
+              </div>
+              <div class="forecast-item">
+                <div class="skeleton-box">
+                  <div class="shimmer"></div>
+                </div>
+                <span class="day">Fri</span>
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <p>
+                  <span class="high-temp">68°</span>
+                  <span class="low-temp">58°</span>
+                </p>
+              </div>
+              <div class="forecast-item">
+                <div class="skeleton-box">
+                  <div class="shimmer"></div>
+                </div>
+                <span class="day">Sat</span>
+                <img src="assets/images/icon-storm.webp" alt="" />
+                <p>
+                  <span class="high-temp">68°</span>
+                  <span class="low-temp">58°</span>
+                </p>
+              </div>
+              <div class="forecast-item">
+                <div class="skeleton-box">
+                  <div class="shimmer"></div>
+                </div>
+                <span class="day">Sun</span>
+                <img src="assets/images/icon-snow.webp" alt="" />
+                <p>
+                  <span class="high-temp">68°</span>
+                  <span class="low-temp">58°</span>
+                </p>
+              </div>
+              <div class="forecast-item">
+                <div class="skeleton-box">
+                  <div class="shimmer"></div>
+                </div>
+                <span class="day">Sun</span>
+                <img src="assets/images/icon-fog.webp" alt="" />
+                <p>
+                  <span class="high-temp">68°</span>
+                  <span class="low-temp">58°</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="weather-hourly">
+          <div class="hourly-label">
+            <span>Hourly Forecast</span>
+            <div class="days-list">
+              <button id="select-day">
+                <span id="day-selected">Tuesday</span>
+                <img src="assets/images/icon-dropdown.svg" alt="" />
+              </button>
+              <ul class="Hourly-day-list">
+                <li data-index="0">Monday</li>
+                <li data-index="1">Tuesday</li>
+                <li data-index="2">Wednesday</li>
+                <li data-index="3">Thrusday</li>
+                <li data-index="4">Friday</li>
+                <li data-index="5">Saturday</li>
+                <li data-index="6">Sunday</li>
+              </ul>
+            </div>
+          </div>
+          <div class="hours-list">
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+            <div class="hours-item">
+              <div class="skeleton-box">
+                <div class="shimmer"></div>
+              </div>
+              <div class="hour-time">
+                <img src="assets/images/icon-partly-cloudy.webp" alt="" />
+                <span>3 PM</span>
+              </div>
+              <div class="hour-temp">68°</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
