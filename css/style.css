@@ -32,6 +32,7 @@ body {
   width: 100%;
   background: var(--neutral-900);
   overflow-x: hidden;
+  outline: 2px solid var(--blue-500);
 }
 header {
   max-width: 1450px;
@@ -59,7 +60,6 @@ header .units-selector {
   border-radius: var(--borderRadius);
   cursor: pointer;
   font-size: 15px;
-  outline: none;
   border: none;
 }
 .units-menu {
@@ -164,9 +164,13 @@ main > h1 {
   background: var(--neutral-800);
   border-radius: var(--borderRadius);
 }
+.search-field:focus-visible {
+  outline: 2px solid var(--blue-500);
+  outline-offset: 2px;
+}
 .search-field input {
-  background: none;
   outline: none;
+  background: none;
   border: none;
   font-size: 18px;
   font-family: var(--normal-fonts);
@@ -186,7 +190,6 @@ main > h1 {
   color: var(--neutral-200);
   font-weight: 500;
   padding: 0px 25px;
-  outline: none;
   border: none;
   border-radius: var(--borderRadius);
   font-family: var(--normal-fonts);
@@ -411,7 +414,6 @@ main > h1 {
   position: relative;
 }
 .hourly-label button {
-  outline: none;
   border: none;
   background: var(--neutral-600);
   color: white;
@@ -438,6 +440,7 @@ main > h1 {
     opacity 0.2s,
     transform 0.2s;
   pointer-events: none;
+
 }
 .days-list ul.active {
   opacity: 1;
@@ -462,6 +465,7 @@ main > h1 {
   margin-top: 15px;
   overflow-y: scroll;
   padding-right: 10px;
+  outline: none;
 }
 .hours-list::-webkit-scrollbar {
   width: 6px;
@@ -645,7 +649,6 @@ main > h1 {
   padding: 7px 14px;
   background: var(--neutral-800);
   border: none;
-  outline: none;
   margin: 15px 0;
   display: flex;
   justify-content: center;
