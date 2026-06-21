@@ -11,7 +11,7 @@ import {
   showShimmer,
 } from "./ui.js";
 
-const userPreference = JSON.parse(localStorage.getItem("userPreference")) || {
+const unitPreference = JSON.parse(localStorage.getItem("unitPreference")) || {
   temperature: "celcius",
   wind: "kmh",
   precipitation: "mm",
@@ -26,7 +26,8 @@ const cityDetails = {
 
 let unitBtn = document.querySelector("#unit-btn");
 unitBtn.addEventListener("click", function () {
-  document.querySelector(".units-menu").classList.toggle("active");
+  const unitMenu = document.querySelector(".units-menu");
+  unitMenu.classList.toggle("active");
 });
 let selectDay = document.querySelector("#select-day");
 selectDay.addEventListener("click", () => {
@@ -44,7 +45,7 @@ function handleSearch() {
     let cities;
     if (searchInput.value.length > 0) {
       cities = await fetchLocations(
-        searchInput.value.replace(/[^a-zA-Z0-9_-]/g, ""),
+        searchInput.value.replace(/[^a-zA-Z\s]/g, ""),
         5,
       );
       displaySuggestions(cities);
@@ -61,62 +62,89 @@ function handleSearch() {
 searchResults.addEventListener("click", (e) => {
   getCoordinates(e);
 });
+searchResults.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    selectedSearchOption(e.target);
+  }
+});
 searchBtn.addEventListener("click", (e) => {
   getCoordinates(e, document.querySelector(".search-results .result"));
 });
 
-export let CityName =
+let CityName =
   "" || `${cityDetails.name}, ${cityDetails.admin1}, ${cityDetails.country}`;
 async function getCoordinates(e, searchBtnQuery) {
   let res = e.target.closest(".result") || searchBtnQuery;
   if (res) {
-    for (const key in cityDetails) {
-      cityDetails[key] = res.dataset[key];
-    }
-    CityName = `${cityDetails.name}, ${cityDetails.admin1}, ${cityDetails.country}`;
-    searchInput.value = `${cityDetails.name}, ${cityDetails.admin1}, ${cityDetails.country}`;
-    removeSearchResult();
-    updateWeather();
+    selectedSearchOption(res);
   }
+}
+function selectedSearchOption(res) {
+  for (const key in cityDetails) {
+    cityDetails[key] = res.dataset[key];
+  }
+  CityName = `${cityDetails.name}, ${cityDetails.admin1}, ${cityDetails.country}`;
+  searchInput.value = `${cityDetails.name}, ${cityDetails.admin1}, ${cityDetails.country}`;
+  removeSearchResult();
+  updateWeather();
 }
 
 hourlyDayList.onclick = (e) => {
   let li = e.target.closest("li");
   if (li) {
-    li.parentElement.classList.remove("active");
-    dayDropDownBtn.textContent = li.textContent;
-    loadHourlyForecast(Number(li.dataset.index));
+    selectedHourlyDayOption(li);
   }
 };
-
+hourlyDayList.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    selectedHourlyDayOption(e.target);
+  }
+});
+function selectedHourlyDayOption(li) {
+  li.parentElement.classList.remove("active");
+  dayDropDownBtn.textContent = li.textContent;
+  loadHourlyForecast(Number(li.dataset.index));
+}
 const unitMenu = document.querySelector(".units-menu");
 unitMenu.addEventListener("click", async (e) => {
   const li = e.target.closest("li");
   if (li) {
-    userPreference[li.parentElement.dataset.group] = li.id;
-    localStorage.setItem("userPreference", JSON.stringify(userPreference));
-    unitMenu.classList.remove("active");
-    li.parentElement.querySelectorAll("li").forEach((e) => {
-      e.classList.remove("active");
-    });
-    li.classList.add("active");
-    updateWeather();
+    selectedUnitOption(li);
+  }
+});
+unitMenu.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    selectedUnitOption(e.target);
   }
 });
 
+function selectedUnitOption(li) {
+  unitPreference[li.parentElement.dataset.group] = li.id;
+  localStorage.setItem("unitPreference", JSON.stringify(unitPreference));
+  unitMenu.classList.remove("active");
+  li.parentElement.querySelectorAll("li").forEach((e) => {
+    e.classList.remove("active");
+  });
+  li.classList.add("active");
+  updateWeather();
+}
+
 (async () => {
-  showWeather(await fetchWeather(cityDetails, userPreference));
-  for (const key in userPreference) {
-    document.querySelector(`#${userPreference[key]}`)?.classList.add("active");
+  updateWeather();
+  for (const key in unitPreference) {
+    document.querySelector(`#${unitPreference[key]}`)?.classList.add("active");
   }
 })();
 
 let retryBtn = document.querySelector(".retry");
 retryBtn.addEventListener("click", async () => {
-  showWeather(await fetchWeather(cityDetails, userPreference));
+  showWeather(await fetchWeather(cityDetails, unitPreference));
 });
 
 async function updateWeather() {
   showShimmer();
-  showWeather(await fetchWeather(cityDetails, userPreference));
+  let weatherResult = await fetchWeather(cityDetails, unitPreference);
+  if (weatherResult) {
+    showWeather(weatherResult, CityName);
+  }
 }
