@@ -24,15 +24,16 @@ export async function fetchLocations(cityName, count) {
     return data.results || [];
   } catch (error) {
     displayError();
+    return [];
   }
 }
 
-export async function fetchWeather(location, userPreference) {
+export async function fetchWeather(location, unitPreference) {
   try {
     let url = `https://api.open-meteo.com/v1/forecast?latitude=${location.lat}&longitude=${location.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=temperature_2m,weather_code,precipitation,wind_speed_10m,apparent_temperature,relative_humidity_2m&timezone=auto`;
 
-    for (const key in userPreference) {
-      if (userPreference[key] === urlAddons[key].unit) {
+    for (const key in unitPreference) {
+      if (unitPreference[key] === urlAddons[key].unit) {
         url += urlAddons[key].url;
       }
     }
@@ -42,5 +43,6 @@ export async function fetchWeather(location, userPreference) {
     return data;
   } catch (error) {
     displayError();
+    return null;
   }
 }
