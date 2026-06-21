@@ -1,4 +1,3 @@
-import { CityName } from "./app.js";
 const degreeSign = "°";
 const percentageSign = "%";
 const weatherCodes = {
@@ -35,15 +34,13 @@ export const searchResults = document.querySelector(".search-results");
 export const noSearchResult = document.querySelector(".no-search-result");
 export function displaySuggestions(cities) {
   if (cities.length > 0) {
-    if (noSearchResult.classList.contains("active")) {
-      noSearchResult.classList.remove("active");
-    }
+    noSearchResult.classList.remove("active");
     searchResults.classList.add("active");
     searchResults.innerHTML = "";
     cities.forEach((element) => {
       searchResults.insertAdjacentHTML(
         "beforeend",
-        `<li
+        `<li tabindex="0"
   data-country="${element.country}"
   data-admin1="${element.admin1}"
   data-name="${element.name}"
@@ -78,7 +75,7 @@ const humidity = document.querySelector(".humidity-value");
 const wind = document.querySelector(".wind-value");
 const precipitation = document.querySelector(".precipitation-value");
 const hourContainer = document.querySelector(".hours-list");
-export async function showWeather(data) {
+export async function showWeather(data, CityName) {
   weatherData = data;
   mainTemp.textContent = `${Math.round(data.current.temperature_2m)}${degreeSign}`;
   mainWeatherVisual.src = `assets/images/icon-${weatherCodes[data.current.weather_code]}.webp`;
@@ -127,9 +124,12 @@ export async function showWeather(data) {
   weatherData.daily.time.forEach((e, index) => {
     hourlyDayList.insertAdjacentHTML(
       "beforeend",
-      `<li data-index="${index}">${new Date(e).toLocaleDateString("en-us", {
-        weekday: "long",
-      })}</li>`,
+      `<li tabindex="0" data-index="${index}">${new Date(e).toLocaleDateString(
+        "en-us",
+        {
+          weekday: "long",
+        },
+      )}</li>`,
     );
   });
   loadHourlyForecast(0);
